@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starter Folder Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.0/jszip.min.js"></script>
+ </head>
+
+<body>
+    <h1>Starter Folder Generator</h1>
+
+    <!-- Project Name Input -->
+    <label for="projectName">Project Name:</label>
+    <input type="text" id="projectName" placeholder="Enter project name">
+
+    <!-- Checkboxes for Included Files -->
+    <h2>Included Files:</h2>
+    <label><input type="checkbox" id="pythonCheckbox"> Python</label><br>
+    <label><input type="checkbox" id="javascriptCheckbox"> JavaScript</label><br>
+    <label><input type="checkbox" id="dockerCheckbox"> Docker</label><br>
+    <label><input type="checkbox" id="cCheckbox"> C</label><br>
+    <label><input type="checkbox" id="htmlCheckbox"> HTML</label><br>
+    <label><input type="checkbox" id="rustCheckbox"> Rust (TODO)</label><br>
+
+    <!-- Download Button -->
+    <button onclick="generateStarterFolder()">Download Starter Folder</button>
+
+    <script>
+        function formatDateYYYYMMDD(date = new Date()) {
+            const yyyy = date.getFullYear();
+            let mm = date.getMonth() + 1;
+            let dd = date.getDate();
+
+            if (mm < 10) mm = '0' + mm;
+            if (dd < 10) dd = '0' + dd;
+
+            return '' + yyyy + mm + dd;
+        }
+
+        function generateStarterFolder() {
+            const projectName = document.getElementById("projectName").value.trim();
+            const includedFiles = {
+                python: document.getElementById("pythonCheckbox").checked,
+                javascript: document.getElementById("javascriptCheckbox").checked,
+                docker: document.getElementById("dockerCheckbox").checked,
+                rust: document.getElementById("rustCheckbox").checked,
+                c: document.getElementById("cCheckbox").checked,
+                html: document.getElementById("htmlCheckbox").checked,
+            };
+
+            // Create a ZIP file containing the selected files and folders
+            const zip = new JSZip();
+
+            if (includedFiles.python) {
+                // Add Python files and folders to the ZIP
+                zip.file(".gitignore", `# Python specific
+.env
+.git/
+logs
+*.log
+npm-debug.log*
+node_modules
+# vscode workspace files are user-specific
+*.sublime-workspace
+# Folder config file
+Desktop.ini
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+ 
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+ 
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+__pypackages__/
+ 
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+# Cython debug symbols
+cython_debug/`);
+                zip.file("requirements.txt", ""); // Empty requirements.txt
+                zip.file("main.py", `#!/usr/bin/env python3
+# ${projectName} Source Code\n`); // Empty main.py
+            }
+
+            if (includedFiles.javascript) {
+                // Add JavaScript files and folders to the ZIP
+                zip.file(".gitignore",  `# Javascript specific
+.env
+.git/
+logs
+*.log
+npm-debug.log*
+node_modules
+# vscode workspace files are user-specific
+*.sublime-workspace
+# Folder config file
+Desktop.ini`);
+            }
+
+            if (includedFiles.docker) {
+                // Add Docker files and folders to the ZIP
+                zip.file(".dockerignore",  `# Docker specific
+**/node_modules/
+**/.git
+**/README.md
+**/LICENSE
+**/.vscode
+**/npm-debug.log
+**/.env
+**/dist `);
+
+                zip.file(".dockerignore",  `# Docker specific
+.env
+.git/
+logs
+*.log
+npm-debug.log*
+node_modules
+# vscode workspace files are user-specific
+*.sublime-workspace
+# Folder config file
+Desktop.ini
+# Docker
+docker-compose.yml
+.dockerignore
+.docker
+
+# Docker Hub metadata
+.dockercfg
+
+# Docker volumes
+docker/data
+
+# Docker build stage
+target/
+
+# Misc
+.DS_Store
+.env
+.venv
+venv/
+
+# editor and IDE paraphernalia
+.idea
+*.swp
+*.swo `);
+// Dockerfile
+  zip.file("Dockerfile", `FROM alpine:latest
+
+WORKDIR /app
+
+COPY . .
+
+CMD ["sh"]`);
+
+            }
+// Inside generateStarterFolder()
+
+if (includedFiles.html) {
+
+  // HTML
+  zip.file("index.html", `<!DOCTYPE html>
+  <html>
+  <head>
+    <title>${projectName}</title>
+  </head>
+  <body>
+    <h1>${projectName}</h1>
+  </body>
+  </html>`);
+
+  // JavaScript
+  zip.file("script.js", `//${projectName} sourcecode`);
+
+  // CSS
+  zip.file("styles.css", `/*${projectName} styles*/`);
+
+}
+
+if (includedFiles.c) {
+
+  // C source file
+  zip.file("src/main.c", `#include <stdio.h>
+  
+  int main() {
+    printf("${projectName} Works!\\n");
+    return 0;
+  }`);
+
+  // C header file
+  zip.file(`include/${projectName}_header.h`, `#ifndef${projectName}_HEADER_H
+  #define ${projectName}_HEADER_H
+  
+  void print_hello();
+  
+  #endif /* ${projectName}_HEADER_H */`);
+
+  // Makefile
+  zip.file("Makefile", `CC = gcc
+  CFLAGS = -Wall -Wextra -I./include
+  SRC_DIR = ./src
+  BIN_DIR = ./bin
+  
+  all:
+      $(CC) $(CFLAGS) -o $(BIN_DIR)/program $(SRC_DIR)/main.c
+
+  clean:
+      rm -f $(BIN_DIR)/program`);
+
+}
+            // Create a README.md with the project name
+            zip.file("README.md", `# ${projectName}
+----
+[![Open Source Love svg2](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
+<!-- <img src="NNNNNN" width="400"> -->
+
+
+<h2 align="center">____________________</h2>
+
+<h4 align="center">________________________</h4>
+
+---
+
+
+# Installation
+### 
+\`\`\`bash
+cd ~
+git clone https://github.com/wisehackermonkey/${projectName}.git
+cd ${projectName}
+\`\`\`
+
+# Summary
+### -  *[Installation](#Installation)*
+<!-- ### -  *[Deveopment](#For-developers)* -->
+<!-- ### -  *[Links](#Links)* -->
+### -  *[Contributors](#Contributors)*
+### -  *[License](#License)*
+
+
+<!-- 
+--------------
+# Screenshots
+- <img src="NNNNNN" width="400"> 
+ 
+
+-------------- 
+# Development
+### 
+\`\`\`bash
+\`\`\`
+
+---
+# Links
+###
+-->
+
+--------------
+# Contributors
+
+[![](https://contrib.rocks/image?repo=wisehackermonkey/${projectName})](https://github.com/wisehackermonkey/${projectName}/graphs/contributors)
+
+##### Made with [contributors-img](https://contrib.rocks).
+
+--------------
+
+
+# License
+
+#### MIT © wisehackermonkey
+<img src="https://upload.wikimedia.org/wikipedia/commons/archive/c/c0/20230603054722%21Osi_standard_logo.png" width="100">
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+\`\`\`bash
+by oran collins
+github.com/wisehackermonkey
+oranbusiness@gmail.com
+${formatDateYYYYMMDD()}
+\`\`\`
+
+#### [More of my Projects](https://github.com/wisehackermonkey/)`);
+
+            // Create a LICENSE file with MIT license
+            const currentYear = new Date().getFullYear();
+            zip.file("LICENSE", `MIT License
+Copyright (c) ${currentYear} Oran Collins
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.`);
+
+            // Generate and trigger the download of the ZIP file
+            zip.generateAsync({type: "blob"}).then(function (content) {
+                const zipUrl = URL.createObjectURL(content);
+                const a = document.createElement("a");
+                a.href = zipUrl;
+                a.download = `${projectName}.zip`;
+                a.click();
+                URL.revokeObjectURL(zipUrl);
+            });
+        }
+    </script>
+    <p> todo: </p>
+    <p>add propetary license, 
+        
+        python and js test running,
+        github actions for linting, 
+        code formating etc,
+        precommit hooks, 
+        ci/cd, 
+        autoname generator using foswig.js
+        Rust template
+    </p>
+</body>
+
+</html>
