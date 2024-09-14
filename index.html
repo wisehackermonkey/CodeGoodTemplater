@@ -22,6 +22,7 @@
     <label><input type="checkbox" id="dockerCheckbox"> Docker</label><br>
     <label><input type="checkbox" id="cCheckbox"> C</label><br>
     <label><input type="checkbox" id="htmlCheckbox"> HTML</label><br>
+    <label><input type="checkbox" id="deployToSurge"> Deploy to surge</label><br>
     <label><input type="checkbox" id="rustCheckbox"> Rust (TODO)</label><br>
 
     <!-- Download Button -->
@@ -48,6 +49,7 @@
                 rust: document.getElementById("rustCheckbox").checked,
                 c: document.getElementById("cCheckbox").checked,
                 html: document.getElementById("htmlCheckbox").checked,
+                surge: document.getElementById("deployToSurge").checked,
             };
 
             // Create a ZIP file containing the selected files and folders
@@ -388,6 +390,91 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.`);
 
+if(includedFiles.surge){
+    let project_name_nospace= projectName.replace(/[^a-zA-Z0-9-]/g, "")
+    zip.file("CNAME",`${project_name_nospace}.surge.sh`)
+
+    zip.file("deploy_to_surge_sh.sh",
+`npm install -g surge
+surge --domain ${project_name_nospace}.surge.sh`)
+zip.file("README.md", `# ${projectName}
+----
+[![Open Source Love svg2](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
+<!-- <img src="NNNNNN" width="400"> -->
+
+
+<h2 align="center">____________________</h2>
+
+<h4 align="center">________________________</h4>
+
+---
+
+
+# Installation
+### 
+\`\`\`bash
+cd ~
+git clone https://github.com/wisehackermonkey/${projectName}.git
+cd ${projectName}
+\`\`\`
+
+# Summary
+### -  *[Installation](#Installation)*
+<!-- ### -  *[Deveopment](#For-developers)* -->
+<!-- ### -  *[Links](#Links)* -->
+### -  *[Contributors](#Contributors)*
+### -  *[License](#License)*
+
+
+<!-- 
+--------------
+# Screenshots
+- <img src="NNNNNN" width="400"> 
+ 
+
+-------------- 
+# Development
+### 
+\`\`\`bash
+\`\`\`
+# Deployment to surge.sh
+### 
+\`\`\`bash
+bash deploy_to_surge_sh.sh
+\`\`\`
+
+---
+# Links
+###
+-->
+
+--------------
+# Contributors
+
+[![](https://contrib.rocks/image?repo=wisehackermonkey/${projectName})](https://github.com/wisehackermonkey/${projectName}/graphs/contributors)
+
+##### Made with [contributors-img](https://contrib.rocks).
+
+--------------
+
+
+# License
+
+#### MIT © wisehackermonkey
+<img src="https://upload.wikimedia.org/wikipedia/commons/archive/c/c0/20230603054722%21Osi_standard_logo.png" width="100">
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+\`\`\`bash
+by oran collins
+github.com/wisehackermonkey
+oranbusiness@gmail.com
+${formatDateYYYYMMDD()}
+\`\`\`
+
+#### [More of my Projects](https://github.com/wisehackermonkey/)`);
+}
             // Generate and trigger the download of the ZIP file
             zip.generateAsync({type: "blob"}).then(function (content) {
                 const zipUrl = URL.createObjectURL(content);
